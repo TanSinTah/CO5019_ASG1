@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "847501992071",
+    "project_id": "el-loginpage",
+    "storage_bucket": "el-loginpage.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:847501992071:android:d6ee63b4fdb0d34cdcd822",
+        "android_client_info": {
+          "package_name": "com.example.el_realproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAiWINvMB76YZYl2Y5ow0KgC7VypAuZ9Nk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
