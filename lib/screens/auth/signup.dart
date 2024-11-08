@@ -1,48 +1,55 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:el_realproject/home.dart';
+import 'package:el_realproject/screens/main/home.dart';
+import 'package:el_realproject/services/auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-// void main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   await Firebase.initializeApp();
-//   runApp(MaterialApp(home: LoginScreen()));//runApp(MyApp());
-// }
-
-class LoginScreen extends StatefulWidget {
+class SignupScreen extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _SignupScreenState createState() => _SignupScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+class _SignupScreenState extends State<SignupScreen> {
+  //auth service
+  final AuthService _auth = AuthService();
+
+  //text edit controller
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   String _errorText = '';
 
-  Future<void> _login() async {
-    try {
-      final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
+  //signup function used to firebase signup
+  Future<void> _signup() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HazardReportingPage()),
+    dynamic result = await _auth.registerWithEmailAndPassword(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
       );
-    } catch (e) {
-      print('Login failed: $e');
-      setState(() {
-       
-        _emailController.clear();
-        _passwordController.clear();
-        _errorText = 'Incorrect email or password. Please retry.';
-      });
-    }
+      print(result);
+      if (result != null) {
+        await prefs.setBool('islogin', true);
+        // Clear confirm password field
+        _confirmPasswordController.clear();
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      } else {
+        print('Signup failed:');
+        setState(() {
+          // Clear fields and set an error message
+          _emailController.clear();
+          _passwordController.clear();
+          _confirmPasswordController.clear();
+          _errorText = 'Signup failed. Please try again.';
+        });
+      }
   }
 
+  //UI
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,21 +60,22 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 20), // Adjust the margin
+              SizedBox(height: 20),
+
+              //top image
               Image.asset(
                 'assets/img/Logo.png',
                 width: 300,
                 height: 300,
                 fit: BoxFit.contain,
               ),
-              SizedBox(height: 15), // Adjust the margin
+              SizedBox(height: 15),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   children: [
                     TextField(
-                      controller: _emailController, // Bind this text field to _emailController
-
+                      controller: _emailController,
                       decoration: InputDecoration(
                         hintText: 'Email',
                         border: OutlineInputBorder(
@@ -75,10 +83,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10), // Adjust the margin
+                    SizedBox(height: 10),
                     TextField(
-                      controller: _passwordController, // Bind this text field to _passwordController
-
+                      controller: _passwordController,
                       decoration: InputDecoration(
                         hintText: 'Password',
                         border: OutlineInputBorder(
@@ -88,44 +95,55 @@ class _LoginScreenState extends State<LoginScreen> {
                       obscureText: true,
                     ),
                     SizedBox(height: 10),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Forgot Password?',
-                          style: TextStyle(
-                            color: Color(0xff007bff),
-                          ),
+                    TextField(
+                      controller: _confirmPasswordController,
+                      decoration: InputDecoration(
+                        hintText: 'Confirm Password',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
+                      obscureText: true,
                     ),
                     SizedBox(height: 20),
+                    //Press signup will fire sign up function
                     ElevatedButton(
-                      onPressed: _login,
+                      onPressed: () {
+                        if (_passwordController.text ==
+                            _confirmPasswordController.text) {
+                          _signup();
+                        } else {
+                          setState(() {
+                            _errorText =
+                                'Passwords do not match. Please try again.';
+                          });
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xff007bff),
                         padding:
-                        EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                            EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
                       child: Text(
-                        'Login',
+                        'Sign Up',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                         ),
                       ),
                     ),
+                    //back button will take the user to the last screen
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context); // Go back to the first screen
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.grey,
-                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -138,10 +156,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-
-                  //Display incorrect username or password
                     Text(
                       _errorText,
+                      //Another error message for any signup erros eg. password too short
                       style: TextStyle(
                         color: Colors.red,
                       ),
@@ -156,4 +173,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-

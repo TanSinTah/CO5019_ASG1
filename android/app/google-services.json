@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "847501992071",
-    "project_id": "el-loginpage",
-    "storage_bucket": "el-loginpage.appspot.com"
+    "project_number": "724355707580",
+    "project_id": "tan-sin-tah-assignement",
+    "storage_bucket": "tan-sin-tah-assignement.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:847501992071:android:d6ee63b4fdb0d34cdcd822",
+        "mobilesdk_app_id": "1:724355707580:android:870b4af425c1b2c01796b9",
         "android_client_info": {
           "package_name": "com.example.el_realproject"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAiWINvMB76YZYl2Y5ow0KgC7VypAuZ9Nk"
+          "current_key": "AIzaSyD-UjM7wy-qLS0hbXf1cF6D-_Ck2dMa0p0"
         }
       ],
       "services": {
