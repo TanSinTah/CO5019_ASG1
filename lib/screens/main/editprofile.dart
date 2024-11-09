@@ -17,6 +17,7 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 
+
 class _EditProfileScreenState extends State<EditProfileScreen> {
 //image file
   XFile? _image;

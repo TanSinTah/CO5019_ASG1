@@ -8,6 +8,7 @@ class UserDetails {
   final String username;
   final String imageUrl;
 
+
   UserDetails({  required this.address,  required this.phoneNumber,  required this.icNumber,required this.username,required this.imageUrl });
 
   //function to convert snapshot to userdetails
