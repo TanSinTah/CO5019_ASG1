@@ -7,6 +7,7 @@ class Report {
   final String location;
   final String status;
 
+
   Report(
       {required this.uid,
       required this.description,
